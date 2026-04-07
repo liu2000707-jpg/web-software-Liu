@@ -1,0 +1,71 @@
+<html>
+    {% load django_bootstrap5%}
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta htttp-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Liu's index</title>
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+    </head>
+
+    <body>
+        <!-- Start navbar -->
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="bavbar-toggle collapsed"
+                        data-toggle="collape" data-target="#navbar"
+                        aria-expanded="false"aria-controls="navbar">
+                        </button>
+                        <a class="navbar-brand" href="{% url 'learning_logs:index' %}">
+                            Learning Log</a>
+            </div>
+
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" >
+                    <li><a href="{% url 'learning_logs:topics' %}">Topics</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li><a>Helllo, {{ user.username }}</a></li>
+                    <li><a href="{% url 'users:logout' %}">Log out</a></li>
+                    {% else %}
+                    <li><a href="{% url 'users:register' %}">Register</a></li>
+                    <li><a href="{% url 'users:login' %}">Log in</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="page-header">
+                {% block page_header %}
+                {% endblock page_header %}
+            </div>
+            <div>
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
+        <p>
+            {% if user.is_authenticated %}
+                Hello, {{ user.username }}. <br>
+                <form action="{% url 'users:logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Log out</button>
+                </form>
+                <a href="{% url 'learning_logs:index' %}">Learning log</a><br>
+                <a href="{% url 'learning_logs:topics' %}">Topics</a>
+            
+            {% else %}
+            <a href="{% url 'users:login' %}">Log in</a>
+            <a href="{% url 'users:register' %}">Register</a><br>
+            {% endif %}
+        </p>
+    </body>
+</html>
